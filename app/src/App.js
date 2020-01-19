@@ -2,30 +2,55 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-/*function Button({children, buttonStyle}) {
-    return <button style={buttonStyle}>{children}</button>
-}*/
-
 class Button extends React.Component {
     render() {
         return (
-            <button style={this.props.buttonStyle}>
+            <button style={this.props.buttonStyle} onClick={this.props.onClick}>
                 {this.props.children}
             </button>
         )
     }
 }
 
-function Newsletter(props) {
-    return (
-        <div>
-            <input type="text" placeholder={props.placeholder}/>
-            <Button buttonStyle={props.buttonStyle}>
-                {props.buttonChildren}
-            </Button>
-        </div>
-    )
+class ColorChanger extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            blockColor: '#fff',
+            styling: {
+                padding: '10px 20px',
+                fontSize: 18,
+                borderRadius: 5,
+            }
+        }
+    }
+
+    handleColorChange(color) {
+        this.setState({blockColor: color})
+    }
+
+    render() {
+        return (
+            <div>
+                <div className="ColorBlock" style={{width: 100, height: 100, background: this.state.blockColor}}></div>
+
+                <Button onClick={() => this.handleColorChange('red')}
+                        buttonStyle={this.state.styling}>
+                    Red
+                </Button>
+                <Button onClick={() => this.handleColorChange('blue')}
+                        buttonStyle={this.state.styling}>
+                    Blue
+                </Button>
+                <Button onClick={() => this.handleColorChange('green')}
+                        buttonStyle={this.state.styling}>
+                    Green
+                </Button>
+            </div>
+        )
+    }
 }
+
 
 function App() {
 
@@ -35,21 +60,10 @@ function App() {
         borderRadius: 5,
     }
 
-    const style2 = {
-        padding: '10px 20px',
-        fontSize: 45,
-        borderRadius: 5,
-    }
-
     return (
         <div className="App">
             <header className="App-header">
-                <Button buttonStyle={style}>Click me</Button>
-                <Button buttonStyle={style2}>🎉</Button>
-                <Button buttonStyle={style2}>💩</Button>
-                <hr />
-
-                <Newsletter placeholder="Enter your email" buttonStyle={style} buttonChildren="Submit" />
+                <ColorChanger />
             </header>
         </div>
     );
