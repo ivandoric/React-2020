@@ -12,6 +12,30 @@ class Button extends React.Component {
     }
 }
 
+function ColorChangerF (props) {
+    const [blockColor, setBlockColor] = React.useState('#fff')
+    const [buttonStyle, setButtonStyle] = React.useState({
+        padding: '10px 20px',
+        fontSize: 18,
+        borderRadius: 5,
+    })
+    return (
+        <div>
+            <div className="ColorBlock" style={{width: 100, height: 100, background: blockColor }}></div>
+
+            <Button buttonStyle={buttonStyle} onClick={() => setBlockColor('red')}>
+                Red
+            </Button>
+            <Button buttonStyle={buttonStyle} onClick={() => setBlockColor('blue')}>
+                Blue
+            </Button>
+            <Button buttonStyle={buttonStyle} onClick={() => setBlockColor('green')}>
+                Green
+            </Button>
+        </div>
+    )
+}
+
 class ColorChanger extends React.Component {
     constructor(props) {
         super(props)
@@ -64,6 +88,10 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <ColorChanger />
+                <br />
+                <br />
+                <br />
+                <ColorChangerF />
             </header>
         </div>
     );
