@@ -1,97 +1,72 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class Button extends React.Component {
     render() {
         return (
-            <button style={this.props.buttonStyle} onClick={this.props.onClick}>
+            <button style={{padding: '10px 20px', fontSize: '18px', borderRadius: '5px'}}  onClick={this.props.onClick}>
                 {this.props.children}
             </button>
         )
     }
 }
 
-function ColorChangerF (props) {
-    const [blockColor, setBlockColor] = React.useState('#fff')
-    const [buttonStyle, setButtonStyle] = React.useState({
-        padding: '10px 20px',
-        fontSize: 18,
-        borderRadius: 5,
-    })
-    return (
-        <div>
-            <div className="ColorBlock" style={{width: 100, height: 100, background: blockColor }}></div>
-
-            <Button buttonStyle={buttonStyle} onClick={() => setBlockColor('red')}>
-                Red
-            </Button>
-            <Button buttonStyle={buttonStyle} onClick={() => setBlockColor('blue')}>
-                Blue
-            </Button>
-            <Button buttonStyle={buttonStyle} onClick={() => setBlockColor('green')}>
-                Green
-            </Button>
-        </div>
-    )
-}
-
-class ColorChanger extends React.Component {
+class Lifecycles extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            blockColor: '#fff',
-            styling: {
-                padding: '10px 20px',
-                fontSize: 18,
-                borderRadius: 5,
-            }
+            counter: 0
         }
+
+        console.log('This will fire first')
     }
 
-    handleColorChange(color) {
-        this.setState({blockColor: color})
+    componentDidMount() {
+        console.log('This will fire third')
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log(prevProps, prevState, snapshot);
+        console.log('This will fire when component updates')
+    }
+
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        return 'Some data we calculated before we updated component'
+    }
+
+    componentWillUnmount() {
+        console.log('I will fire when component unmounts')
+    }
+
+    countUp() {
+        this.setState({counter: this.state.counter + 1})
     }
 
     render() {
-        return (
+        return(
             <div>
-                <div className="ColorBlock" style={{width: 100, height: 100, background: this.state.blockColor}}></div>
-
-                <Button onClick={() => this.handleColorChange('red')}
-                        buttonStyle={this.state.styling}>
-                    Red
-                </Button>
-                <Button onClick={() => this.handleColorChange('blue')}
-                        buttonStyle={this.state.styling}>
-                    Blue
-                </Button>
-                <Button onClick={() => this.handleColorChange('green')}
-                        buttonStyle={this.state.styling}>
-                    Green
-                </Button>
+                <h1>Lifecycles.</h1>
+                <Button onClick={() => this.countUp()}>{this.state.counter}</Button>
             </div>
         )
     }
 }
 
-
 function App() {
+    const [lifecycles, setLifecycles] = React.useState(true)
 
-    const style = {
-        padding: '10px 20px',
-        fontSize: 18,
-        borderRadius: 5,
+    const toggleLifecycles = () => {
+        setLifecycles(!lifecycles)
     }
 
     return (
         <div className="App">
             <header className="App-header">
-                <ColorChanger />
+                <Button onClick={() => toggleLifecycles()}>Toggle Lifecycles</Button>
                 <br />
                 <br />
                 <br />
-                <ColorChangerF />
+                {lifecycles && <Lifecycles />}
             </header>
         </div>
     );
