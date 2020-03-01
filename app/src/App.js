@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 
 class Button extends React.Component {
@@ -11,62 +11,54 @@ class Button extends React.Component {
     }
 }
 
-class Lifecycles extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            counter: 0
+const namesArray = ['jack', 'jill', 'tom', 'harvey']
+
+function HelloWorld() {
+    React.useEffect(() => {
+        console.log('Hello World')
+
+        return function cleanup() {
+            console.log('Goodbye world')
         }
+    }, [])
 
-        console.log('This will fire first')
-    }
-
-    componentDidMount() {
-        console.log('This will fire third')
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(prevProps, prevState, snapshot);
-        console.log('This will fire when component updates')
-    }
-
-    getSnapshotBeforeUpdate(prevProps, prevState) {
-        return 'Some data we calculated before we updated component'
-    }
-
-    componentWillUnmount() {
-        console.log('I will fire when component unmounts')
-    }
-
-    countUp() {
-        this.setState({counter: this.state.counter + 1})
-    }
-
-    render() {
-        return(
-            <div>
-                <h1>Lifecycles.</h1>
-                <Button onClick={() => this.countUp()}>{this.state.counter}</Button>
-            </div>
-        )
-    }
+    return <div>Hello World</div>
 }
 
+function Effects() {
+    const [names, setNames] = React.useState([])
+    const [counter, setCounter] = React.useState(0)
+    const [helloWorld, toggleHelloWorld] = React.useState(true)
+
+    React.useEffect(() => {
+        setNames(namesArray)
+        setCounter(counter + 1)
+    }, [])
+
+    React.useEffect(() => {
+        setNames(names => [...names, counter])
+    }, [counter])
+
+    return (
+        <div>
+            {helloWorld && <HelloWorld />}
+            <Button onClick={() => setCounter(counter + 1)}>{counter}</Button>
+            <Button onClick={() => toggleHelloWorld(!helloWorld)}>Toggle Hello</Button>
+            <ul>
+                {names.map((name, index) => (
+                    <li key={index}>{name}</li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+
+
 function App() {
-    const [lifecycles, setLifecycles] = React.useState(true)
-
-    const toggleLifecycles = () => {
-        setLifecycles(!lifecycles)
-    }
-
     return (
         <div className="App">
             <header className="App-header">
-                <Button onClick={() => toggleLifecycles()}>Toggle Lifecycles</Button>
-                <br />
-                <br />
-                <br />
-                {lifecycles && <Lifecycles />}
+                <Effects />
             </header>
         </div>
     );
