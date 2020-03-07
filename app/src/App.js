@@ -11,54 +11,55 @@ class Button extends React.Component {
     }
 }
 
-const namesArray = ['jack', 'jill', 'tom', 'harvey']
 
-function HelloWorld() {
-    React.useEffect(() => {
-        console.log('Hello World')
+const AppContext = React.createContext(null)
 
-        return function cleanup() {
-            console.log('Goodbye world')
-        }
-    }, [])
+function ContextWrapper(props) {
+    const user = {
+        firstName: 'John',
+        lastName: 'Doe'
+    }
 
-    return <div>Hello World</div>
+    const [isVisible, toggleVisible] = React.useState(true)
+
+    return (
+        <AppContext.Provider value={{user, isVisible, toggleVisible}}>
+            {props.children}
+        </AppContext.Provider>
+    )
 }
 
-function Effects() {
-    const [names, setNames] = React.useState([])
-    const [counter, setCounter] = React.useState(0)
-    const [helloWorld, toggleHelloWorld] = React.useState(true)
-
-    React.useEffect(() => {
-        setNames(namesArray)
-        setCounter(counter + 1)
-    }, [])
-
-    React.useEffect(() => {
-        setNames(names => [...names, counter])
-    }, [counter])
+function User(props) {
+    const { user, isVisible, toggleVisible } = React.useContext(AppContext)
 
     return (
         <div>
-            {helloWorld && <HelloWorld />}
-            <Button onClick={() => setCounter(counter + 1)}>{counter}</Button>
-            <Button onClick={() => toggleHelloWorld(!helloWorld)}>Toggle Hello</Button>
-            <ul>
-                {names.map((name, index) => (
-                    <li key={index}>{name}</li>
-                ))}
-            </ul>
+            {isVisible && <div style={{height: 100, width: 100, background: '#ffffff'}}></div>}
+            <br />
+            <Button onClick={() => toggleVisible(!isVisible)}>Toggle square</Button>
+            <br />
+            My name is {user.firstName} {user.lastName}
         </div>
     )
 }
+
+function Card(props) {
+    return <User />
+}
+
+function CardWrapper(props) {
+    return <Card />
+}
+
 
 
 function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <Effects />
+                <ContextWrapper>
+                    <CardWrapper />
+                </ContextWrapper>
             </header>
         </div>
     );
